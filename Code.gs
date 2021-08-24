@@ -41,6 +41,7 @@ const sendTelegram = () => {
   if (!data.length) {
     return;
   }
+      
   let isAlert = false;
   let prices = data.map(item => {
     if (item.symbol == 'BTC' && Math.abs(item.price.percent_change_24h) > STEP_PERCENT_ALERT) {
@@ -48,13 +49,13 @@ const sendTelegram = () => {
     }
     return `<a href="${CRYPTO_CURRENCIES[item.symbol]}">${item.symbol}</a>: <pre>${JSON.stringify(item.price, null, '\t')}</pre>`
   }).join("\n");
+      
   if (isAlert) {
-    let message = `Click to link for more details <a href="https://coinmarketcap.com/coins/">CoinMarketCap</a>\n${prices}
-    `;
-    const text = encodeURIComponent(message);
-    const url = `${TELEGRAM_API}?chat_id=${CHAT_ID}&text=${text}&parse_mode=HTML`;
-    const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
-    const { ok, description } = JSON.parse(response);
+    let message = `Click to link for more details <a href="https://coinmarketcap.com/coins/">CoinMarketCap</a>\n${prices}`;
+    let text = encodeURIComponent(message);
+    let url = `${TELEGRAM_API}?chat_id=${CHAT_ID}&text=${text}&parse_mode=HTML`;
+    let response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    let { ok, description } = JSON.parse(response);
     if (ok !== true) {
       Logger.log(`Error: ${description}`);
     } else {
